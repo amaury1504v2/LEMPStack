@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  nginx:
+    container_name: amaury_nginx
+    hostname: amaury_nginx
+    build: 
+      context: .
+      dockerfile: ./containers/nginx/Dockerfile
+    ports:
+      - '8080:80' # 1er : port de mac os; 2e : port du conteneur docker
+    networks:
+      - amaury-lemp
+    volumes:
+      - './src/:/var/www/html'
+      - './containers/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+  php:
+    container_name: amaury_php_lemp
+    hostname: amaury_php_lemp
+    build: ./containers/php
+    networks:
+      - amaury-lemp
+    volumes:
+      - './src/:/var/www/html'
+  mysql:
+    container_name: amaury_mysql_lemp
+    hostname: amaury_mysql_lemp
+    build: ./containers/mysql
+    ports: 
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - amaury-lemp
+networks:
+  amaury-lemp:
